@@ -53,6 +53,13 @@ public class CompteEstBon {
 
     private static List<Pair<Integer, Integer>> genererPossibilites(List<Integer> nombres) {
         List<Pair<Integer, Integer>> pairs = new ArrayList<>();
+        for(int i=0;i< nombres.size()-1;i++){
+            for(int j=0;j<nombres.size()-1;j++){
+                if(i!=j){
+                    pairs.add(new Pair<>(nombres.get(i),nombres.get(j)));
+                }
+            }
+        }
         return pairs;
     }
 
