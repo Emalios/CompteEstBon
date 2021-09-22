@@ -68,7 +68,7 @@ public class CompteEstBon {
 
     private static boolean acceptable(int nombre1, int nombre2, BinaryOperator<Integer> operation) {
         if(nombre2 == 0 && operation.equals(DIV)) return false;
-        //if(((nombre1 == 1) || (nombre2 == 1)) && (operation.equals(DIV) || operation.equals(MUL))) return false;
+        if(((nombre1 == 1) || (nombre2 == 1)) && (operation.equals(DIV) || operation.equals(MUL))) return false;
         int resultat = operation.apply(nombre1, nombre2);
         if(resultat < 0) return false;
         return true;
