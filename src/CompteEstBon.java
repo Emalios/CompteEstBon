@@ -4,15 +4,15 @@ import java.util.function.BinaryOperator;
 
 public class CompteEstBon {
 
+    private static BinaryOperator<Integer> PLUS = (integer, integer2) -> integer + integer2;
+    private static BinaryOperator<Integer> MINUS = (integer, integer2) -> integer - integer2;
+    private static BinaryOperator<Integer> MUL = (integer, integer2) -> integer * integer2;
+    private static BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
+
     public static void main(String[] args) {
         List<Integer> nombres = List.of(9, 1, 6, 8, 2, 3);
         int attendu = 845;
-        List<BinaryOperator<Integer>> operations = List.of(
-                (integer, integer2) -> integer + integer2,
-                (integer, integer2) -> integer * integer2,
-                (integer, integer2) -> integer / integer2,
-                (integer, integer2) -> integer - integer2
-        );
+        List<BinaryOperator<Integer>> operations = List.of(PLUS, MINUS, MUL, DIV);
         System.out.println(nombres);
     }
 
@@ -32,7 +32,7 @@ public class CompteEstBon {
                 int nombre2 = possibilite.getSecound();
                 BinaryOperator<Integer> operation = operations.get(indiceOperation);
                 int resultat = operation.apply(nombre1, nombre2);
-                if(resultat >= 0) {
+                if(acceptable(nombre1, nombre2, operation, resultat)) {
                     List<Integer> newNombres = new ArrayList<>(nombres);
                     newNombres.remove(nombre1);
                     newNombres.remove(nombre2);
@@ -49,6 +49,25 @@ public class CompteEstBon {
             }
         }
         return infructueux;
+    }
+
+    private static boolean acceptable(int nombre1, int nombre2, BinaryOperator<Integer> operation, int resultat) {
+        if(resultat < 0) return false;
+        if(nombre2 == 0 && operation.equals(DIV)) return false;
+        return true;
+    }
+
+    private static String afficherOperation(BinaryOperator<Integer> operator) {
+        if (PLUS.equals(operator)) {
+            return "+";
+        } else if (MINUS.equals(operator)) {
+            return "-";
+        } else if (MUL.equals(operator)) {
+            return "*";
+        } else if (DIV.equals(operator)) {
+            return "/";
+        }
+        return "erreur";
     }
 
     private static List<Pair<Integer, Integer>> genererPossibilites(List<Integer> nombres) {
