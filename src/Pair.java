@@ -15,4 +15,9 @@ public class Pair<K, V> {
     public V getSecound() {
         return secound;
     }
+
+    @Override
+    public String toString() {
+        return "(" + first + "," + secound + ")";
+    }
 }

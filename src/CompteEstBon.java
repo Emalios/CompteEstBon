@@ -13,7 +13,7 @@ public class CompteEstBon {
         List<Integer> nombres = List.of(9, 1, 6, 8, 2, 3);
         int attendu = 845;
         List<BinaryOperator<Integer>> operations = List.of(PLUS, MINUS, MUL, DIV);
-        System.out.println(nombres);
+        System.out.println(genererPossibilites(List.of(1, 2, 3)));
     }
 
     public static boolean rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
