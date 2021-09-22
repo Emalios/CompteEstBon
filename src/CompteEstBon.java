@@ -9,13 +9,19 @@ public class CompteEstBon {
     private static BinaryOperator<Integer> MUL = (integer, integer2) -> integer * integer2;
     private static BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
 
+    private static List<String> calculs = new ArrayList<>();
     private static int NB_APPEL = 0;
 
     public static void main(String[] args) {
         List<Integer> nombres = List.of(9, 1, 6, 8, 2, 3);
         int attendu = 845;
         List<BinaryOperator<Integer>> operations = List.of(PLUS, MINUS, MUL, DIV);
-        rechercherSolution(nombres, operations, attendu);
+        boolean infructueux = rechercherSolution(nombres, operations, attendu);
+        if(!infructueux) {
+            System.out.println("Le compte est bon!!");
+            System.out.println("Calcul :");
+            calculs.forEach(System.out::println);
+        }
         System.out.println("Nb appel: " + NB_APPEL);
     }
 
@@ -51,7 +57,7 @@ public class CompteEstBon {
                             indiceNombres++;
                         }
                     } else {
-                        System.out.println(nombre1 + afficherOperation(operation) + nombre2 + "=" + resultat);
+                        calculs.add(0, nombre1 + afficherOperation(operation) + nombre2 + " = " + resultat);
                     }
                 } else {
                     //System.out.println("Pas accessible avec: " + nombre1 + afficherOperation(operation) + nombre2);
@@ -98,5 +104,4 @@ public class CompteEstBon {
         }
         return pairs;
     }
-
 }
