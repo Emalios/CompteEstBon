@@ -6,6 +6,13 @@ public class CompteEstBon {
 
     public static void main(String[] args) {
         List<Integer> nombres = List.of(9, 1, 6, 8, 2, 3);
+        int attendu = 845;
+        List<BinaryOperator<Integer>> operations = List.of(
+                (integer, integer2) -> integer + integer2,
+                (integer, integer2) -> integer * integer2,
+                (integer, integer2) -> integer / integer2,
+                (integer, integer2) -> integer - integer2
+        );
         System.out.println(nombres);
     }
 

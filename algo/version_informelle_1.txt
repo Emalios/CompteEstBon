@@ -1,0 +1,41 @@
+fonction rechercherSolution(nombres: Nombres, operations: Operations, attendu: entier): booléen
+Debut
+  si resultat est dans nombres alors
+    infructueux <- faux
+  sinon
+    infructueux <- vrai
+    //on initialise tous les couples possibles
+    possibilites <- genererCouples(nombres)
+    //indices pour essayer toutes les possibilités entre tous les couples possibles et toutes les opérations
+    indiceNombres <- 0
+    indiceOperations <- 0
+    tantque infructueux et indiceNombres < taille(possibilites)  faire
+      //on récupère la possibilité à l'indice correspondant
+      possibilite <- getPossibilites(possibilites, indiceNombres)
+      //on récupère les nombres dans le couple et l'opération afin de faire le calcul du résultat de cette combinaison
+      nombre1 <- possibilite[0]
+      nombre2 <- possibilite[1]
+      operation <- operations[indiceOperations]
+      resultat <- calculerResultat(nombre1, nombre2, operation)
+      si resultat >= 0 alors
+        //si le résultat est acceptable alors on crée un nouveau tableaux de nombres à partir de celui donné en paramètre auquel on retire les 2 nombres utilisés et  auquel on rajoute le résultat acceptable trouvé
+        nouveauNombres <- nouveauNombres(nombres)
+        retirerA(nouveauNombres, nombre1)
+        retirerA(nouveauNombres, nombre2)
+        ajouterA(nouveauNombres, resultat)
+        //on appelle récursivement
+        infructueux <- rechercherSolution(nouveauNombres, operations, entier)
+        //si l'appel récursif échoux alors on teste soit avec une autre opération si on a pas tout essayer, soit avec une autre pair de nombre
+        si infructueux alors
+          si indiceOperations < taille(operations) alors
+            indiceOperations <- indiceOperations + 1
+          sinon
+            indiceOperations <- 0
+            indiceNombres <- indiceNombres + 1
+          fsi
+        fsi
+      fsi
+    ftant
+  fsi
+  retourne infructueux
+Fin
