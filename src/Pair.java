@@ -8,11 +8,11 @@ public class Pair<K, V> {
         this.secound = secound;
     }
 
-    public K getFirst() {
+    public K _1() {
         return first;
     }
 
-    public V getSecound() {
+    public V _2() {
         return secound;
     }
 

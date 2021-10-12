@@ -1,14 +1,14 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
 public class CompteEstBon {
 
-    private static BinaryOperator<Integer> PLUS = (integer, integer2) -> integer + integer2;
-    private static BinaryOperator<Integer> MINUS = (integer, integer2) -> integer - integer2;
-    private static BinaryOperator<Integer> MUL = (integer, integer2) -> integer * integer2;
-    private static BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
+    private static final BinaryOperator<Integer> PLUS = (integer, integer2) -> integer + integer2;
+    private static final BinaryOperator<Integer> MINUS = (integer, integer2) -> integer - integer2;
+    private static final BinaryOperator<Integer> MUL = (integer, integer2) -> integer * integer2;
+    private static final BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
+    public static final List<BinaryOperator<Integer>> LIST_OPERATIONS = List.of(MUL, PLUS, DIV, MINUS);
 
     private static List<String> calculs = new ArrayList<>();
     private static int NB_APPEL = 0;
@@ -16,8 +16,7 @@ public class CompteEstBon {
     public static void main(String[] args) {
         List<Integer> nombres = new ArrayList<>(List.of(3, 75, 1, 4, 5, 2));
         int attendu = 598;
-        List<BinaryOperator<Integer>> operations = List.of(PLUS, MINUS, MUL, DIV);
-        boolean infructueux = rechercherSolution(nombres, operations, attendu);
+        boolean infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu)._1();
         if(!infructueux) {
             System.out.println("Le compte est bon!!");
             System.out.println("Calcul :");
@@ -27,26 +26,27 @@ public class CompteEstBon {
 
         }
         System.out.println("Nb appel: " + NB_APPEL);
-        //afficherSolution(infructueux);
-        System.out.println(getMoyenneIterations(1,operations));
+        System.out.println("Commencement test");
+        Nombres.faireTourner(200);
     }
 
-    public static boolean rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
+    public static Pair<Boolean, Integer> rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
+        NB_APPEL++;
         boolean infructueux;
         if(nombres.contains(attendu)) {
             infructueux = false;
         }
         else {
             //tri par ordre croissant
-            nombres.sort((o1, o2) -> Integer.compare(o2, o1));
+            //nombres.sort((o1, o2) -> Integer.compare(o2, o1));
             infructueux = true;
             int indiceNombres = 0;
             int indiceOperation = 0;
             List<Pair<Integer, Integer>> possibilites = genererPossibilites(nombres);
             while (infructueux && indiceNombres < possibilites.size() - 1) {
                 Pair<Integer, Integer> possibilite = possibilites.get(indiceNombres);
-                int nombre1 = possibilite.getFirst();
-                int nombre2 = possibilite.getSecound();
+                int nombre1 = possibilite._1();
+                int nombre2 = possibilite._2();
                 BinaryOperator<Integer> operation = operations.get(indiceOperation);
                 if(acceptable(nombre1, nombre2, operation)) {
                     int resultat = operation.apply(nombre1, nombre2);
@@ -55,8 +55,7 @@ public class CompteEstBon {
                     newNombres.remove(newNombres.indexOf(nombre2));
                     newNombres.add(0, resultat);
                     //System.out.println("Essaie avec: " + nombre1 + afficherOperation(operation) + nombre2 + "=" + resultat);
-                    NB_APPEL++;
-                    infructueux = rechercherSolution(newNombres, operations, attendu);
+                    infructueux = rechercherSolution(newNombres, operations, attendu)._1();
                     if(infructueux) {
                         //System.out.println("Infructueux avec: " + nombre1 + afficherOperation(operation) + nombre2 + "=" + resultat);
                         if(indiceOperation < operations.size() - 1) indiceOperation++;
@@ -77,7 +76,11 @@ public class CompteEstBon {
                 }
             }
         }
-        return infructueux;
+        return new Pair<>(infructueux, NB_APPEL);
+    }
+
+    public static void reset() {
+        NB_APPEL = 0;
     }
 
     private static void afficherSolution(boolean b){
@@ -92,6 +95,7 @@ public class CompteEstBon {
     private static boolean acceptable(int nombre1, int nombre2, BinaryOperator<Integer> operation) {
         if(nombre2 == 0 && operation.equals(DIV)) return false;
         if(((nombre1 == 1) || (nombre2 == 1)) && (operation.equals(DIV) || operation.equals(MUL))) return false;
+        if(operation == DIV && nombre1 % nombre2 != 0) return false;
         int resultat = operation.apply(nombre1, nombre2);
         if(resultat < 0) return false;
         return true;
@@ -120,17 +124,5 @@ public class CompteEstBon {
             }
         }
         return pairs;
-    }
-
-    public static float getMoyenneIterations(int k,List<BinaryOperator<Integer>> operations){
-        Nombres n = new Nombres();
-        NB_APPEL = 0;
-        for(int i=0;i<=k;i++){
-            n.ajouterProbleme();
-        }
-        for (List list : n.getNombres().keySet()) {
-            rechercherSolution(list,operations,n.getNombres().get(list));
-        }
-        return NB_APPEL/k;
     }
 }
