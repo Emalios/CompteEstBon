@@ -38,16 +38,8 @@ public class Nombres {
      * Méthode affichant à l'utilisateur la combianison de nombre et le résultat attendu
      */
     public void toStringNombres() {
-        for (List list : nombres.keySet()) {
-            System.out.println("Nombres: " + list + "\nRésulat souhaité: " + nombres.get(list) + "\n");
+        for (List<Integer> list : nombres.keySet()) {
+            System.out.println("Nombres: " + list + "\nRésultat souhaité: " + nombres.get(list) + "\n");
         }
-    }
-
-    /**
-     * getter nombres
-     * @return nombres
-     */
-    public Map<List<Integer>, Integer> getNombres() {
-        return this.nombres;
     }
 }
