@@ -32,17 +32,6 @@ public class CompteEstBon {
     private static List<String> calculs = new ArrayList<>();
 
     /**
-     * liste représentant les calculs fait
-     */
-    private static List<String> calculsTest = new ArrayList<>();
-
-    private static Pair<BinaryOperator<Integer>, Integer> NOMBRE_PLUS_PROCHE = new Pair<>(null, 0);
-    /**
-     * liste représentant les calculs le plus proche fait
-     */
-    private static List<Pair<BinaryOperator<Integer>, Integer>> calculsPlusProche = new ArrayList<>();
-
-    /**
      * variable représentant le nombre d'appel à rechercherSolution
      */
     private static int NB_APPEL = 0;
@@ -50,18 +39,26 @@ public class CompteEstBon {
     public static void main(String[] args) {
         List<Integer> nombres = new ArrayList<>(List.of(1, 3, 5, 1, 10, 3, 2));
         int attendu = 973;
-        boolean infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu)._1();
-        if(!infructueux) {
-            System.out.println("Le compte est bon!!");
-            System.out.println("Calcul :");
-            calculs.forEach(System.out::println);
-        } else {
-            System.out.println("Pas de solutions exacte.");
-            System.out.println("Calcul :");
-            calculsPlusProche.forEach(binaryOperatorIntegerPair -> {
-                System.out.println(afficherOperation(binaryOperatorIntegerPair._1()) + " = " + binaryOperatorIntegerPair._2());
-            });
+        boolean infructueux = true;
+        //variable oscillant entre -1 et 1
+        int compteur = -1;
+        //variable représentant le nombre d'essaie
+        int nbEssaie = 0;
+        while (infructueux) {
+            infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu + nbEssaie * compteur)._1();
+            if(compteur == -1) compteur = 1;
+            else {
+                compteur = -1;
+                nbEssaie++;
+            }
+            if(infructueux) {
+                System.out.println("Pas de solutions exacte.");
+                System.out.println("Calcul avec " + (attendu + nbEssaie * compteur));
+            }
         }
+        System.out.println("Le compte est bon!!");
+        System.out.println("Calcul :");
+        calculs.forEach(System.out::println);
         System.out.println("Nb appel: " + NB_APPEL);
         System.out.println("Commencement test");
         //Nombres.faireTourner(2000);
@@ -69,9 +66,6 @@ public class CompteEstBon {
 
     public static Pair<Boolean, Integer> rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
         NB_APPEL++;
-        Pair<BinaryOperator<Integer>, Integer> plusProches = new Pair<>(NOMBRE_PLUS_PROCHE._1(), NOMBRE_PLUS_PROCHE._2());
-        int nbPlusProche1 = 0;
-        int nbPlusProche2 = 0;
         boolean infructueux;
         if(nombres.contains(attendu)) {
             infructueux = false;
@@ -95,13 +89,6 @@ public class CompteEstBon {
                     newNombres.remove(newNombres.indexOf(nombre2));
                     newNombres.add(0, resultat);
                     infructueux = rechercherSolution(newNombres, operations, attendu)._1();
-                    //test
-                    if (Math.abs(resultat - attendu) < Math.abs(plusProches._2() - attendu)) {
-                        nbPlusProche1 = nombre1;
-                        nbPlusProche2 = nombre2;
-                        plusProches = new Pair<>(operation, resultat);
-                    }
-                    //fintest
                     if(infructueux) {
                         //si on a pas essayé toutes les opérations on essaie la suivante
                         if(indiceOperation < operations.size() - 1) indiceOperation++;
@@ -124,9 +111,6 @@ public class CompteEstBon {
                     }
                 }
             }
-            //System.out.println("ajout de : " + plusProches);
-            System.out.println("add");
-            calculsTest.add(0, nbPlusProche1 + afficherOperation(plusProches._1()) + nbPlusProche2 + " = " + plusProches._2());
         }
         return new Pair<>(infructueux, NB_APPEL);
     }
