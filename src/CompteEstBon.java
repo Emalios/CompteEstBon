@@ -27,6 +27,8 @@ public class CompteEstBon {
 
         }
         System.out.println("Nb appel: " + NB_APPEL);
+        //afficherSolution(infructueux);
+        System.out.println(getMoyenneIterations(1,operations));
     }
 
     public static boolean rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
@@ -78,6 +80,15 @@ public class CompteEstBon {
         return infructueux;
     }
 
+    private static void afficherSolution(boolean b){
+        if(!b) {
+            System.out.println("Le compte est bon!!");
+            System.out.println("Calcul :");
+            calculs.forEach(System.out::println);
+        }
+        System.out.println("Nb appel: " + NB_APPEL);
+    }
+
     private static boolean acceptable(int nombre1, int nombre2, BinaryOperator<Integer> operation) {
         if(nombre2 == 0 && operation.equals(DIV)) return false;
         if(((nombre1 == 1) || (nombre2 == 1)) && (operation.equals(DIV) || operation.equals(MUL))) return false;
@@ -109,5 +120,17 @@ public class CompteEstBon {
             }
         }
         return pairs;
+    }
+
+    public static float getMoyenneIterations(int k,List<BinaryOperator<Integer>> operations){
+        Nombres n = new Nombres();
+        NB_APPEL = 0;
+        for(int i=0;i<=k;i++){
+            n.ajouterProbleme();
+        }
+        for (List list : n.getNombres().keySet()) {
+            rechercherSolution(list,operations,n.getNombres().get(list));
+        }
+        return NB_APPEL/k;
     }
 }
