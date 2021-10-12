@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
@@ -13,14 +14,17 @@ public class CompteEstBon {
     private static int NB_APPEL = 0;
 
     public static void main(String[] args) {
-        List<Integer> nombres = List.of(9, 1, 6, 8, 2, 3);
-        int attendu = 845;
+        List<Integer> nombres = new ArrayList<>(List.of(3, 75, 1, 4, 5, 2));
+        int attendu = 598;
         List<BinaryOperator<Integer>> operations = List.of(PLUS, MINUS, MUL, DIV);
         boolean infructueux = rechercherSolution(nombres, operations, attendu);
         if(!infructueux) {
             System.out.println("Le compte est bon!!");
             System.out.println("Calcul :");
             calculs.forEach(System.out::println);
+        } else {
+            System.out.println("Pas de solutions exacte.");
+
         }
         System.out.println("Nb appel: " + NB_APPEL);
     }
@@ -31,6 +35,8 @@ public class CompteEstBon {
             infructueux = false;
         }
         else {
+            //tri par ordre croissant
+            nombres.sort((o1, o2) -> Integer.compare(o2, o1));
             infructueux = true;
             int indiceNombres = 0;
             int indiceOperation = 0;
