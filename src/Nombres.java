@@ -42,8 +42,10 @@ public class Nombres {
         int i = 0;
         Set<List<Integer>> keySet = combinaisons.keySet();
         for (List<Integer> nombres : keySet) {
-            CompteEstBon.reset();
             int attendu = combinaisons.get(nombres);
+            //tri par ordre croissant
+            nombres.sort((o1, o2) -> Integer.compare(o2, o1));
+            CompteEstBon.reset();
             Pair<Boolean, Integer> pair = CompteEstBon.rechercherSolution(nombres, CompteEstBon.LIST_OPERATIONS, attendu);
             if(pair._1()) {
                 nombreDeRepetition--;

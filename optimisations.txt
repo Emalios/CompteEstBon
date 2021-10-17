@@ -1,0 +1,22 @@
+Le première version de l'algorithme sans réel tri obtenait 1 200 000 appels environ sur l'exemple du td
+9 1 6 8 2 3 avec en résultat 845
+(https://github.com/Emalios/CompteEstBon/blob/6e8ba41aab0b40dc86df26c7f5579d052c1e98df/src/CompteEstBon.java)
+
+Ensuite la deuxième version de l'algorithme ne rendait plus acceptable les multiplications ou divisions avec un '1' en opérande.
+Nous sommes passés à 545 000 appels environ sur le même exemple
+(https://github.com/Emalios/CompteEstBon/blob/367a02cab85e8b8213f32da84ba66385a27234e5/src/CompteEstBon.java)
+
+Ensuite nous avons implémenté un système pour calculer la moyenne d'appel sur des grandes quantités de proposition générés aléatoirement afin de tester nos optimisations.
+(https://github.com/Emalios/CompteEstBon/commit/03d39645b1930e1b1acd94751e384b7e0ed57e14)
+(https://github.com/Emalios/CompteEstBon/commit/77ba71e3ccac1ccbc4486bef7dc3cf7435e11cfa)
+(https://github.com/Emalios/CompteEstBon/commit/a5cc05c391fdd8dfd96692c9947826d661815db1)
+
+Ensuite nous avons essayés de trier la liste des nombres par ordre croissant, sur 5000 combinaisons testés, nous avions en moyenne 218 866 appels
+Ensuite nous avons essayés sans aucun trie, sur 5000 combinaisons testés, nous avions en moyenne 165 375 appels
+Ensuite nous avons essayés de trier la liste des nombres par ordre décroissant, sur 5000 combinaisons testés, nous avions en moyenne 163 879 appels, nous sommes donc partis sur cela
+
+Ensuite nous avons essayé de changer l'ordre des opérations
+Pour l'ordre MUL, DIV, PLUS, MINUS, sur 5000 combinaisons testés, nous avions en moyenne 202 661 appels
+Pour l'ordre MUL, DIV, MINUS, PLUS, sur 5000 combinaisons testés, nous avions en moyenne 199 585 appels
+Pour l'ordre MUL, PLUS, DIV, MINUS, sur 5000 combinaisons testés, nous avions en moyenne 177 689 appels
+Pour l'ordre PLUS, MUL, DIV, MINUS, sur 5000 combinaisons testés, nous avions en moyenne 173 660 appels, nous sommes partis sur cela
