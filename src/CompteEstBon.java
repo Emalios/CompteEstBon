@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 
+//auteurs: Tom Condenseau, Hugo Bergerat
 public class CompteEstBon {
 
     /**
@@ -23,8 +24,13 @@ public class CompteEstBon {
     private static final BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
     /**
      * liste de toutes les opérations
+     * MUL, DIV, PLUS, MINUS : 181 000
+     * MUL, DIV, MINUS, PLUS : 186 000
+     * MUL, PLUS, DIV, MINUS : 173 000
+     * PLUS, MUL, DIV, MINUS : 171 000
+     * PLUS, MUL, DIV, MINUS : 170 000
      */
-    public static final List<BinaryOperator<Integer>> LIST_OPERATIONS = List.of(MUL, DIV, PLUS, MINUS);
+    public static final List<BinaryOperator<Integer>> LIST_OPERATIONS = List.of(PLUS, MUL, DIV, MINUS);
 
     /**
      * liste représentant les calculs fait
@@ -39,8 +45,12 @@ public class CompteEstBon {
     private static int solutionPlusProche;
 
     public static void main(String[] args) {
-        List<Integer> nombres = new ArrayList<>(List.of(50, 5, 1, 6, 5, 6));
-        int attendu = 686;
+        if(args.length < 7) return;
+        List<Integer> nombres = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            nombres.add(Integer.valueOf(args[i]));
+        }
+        int attendu = Integer.parseInt(args[6]);
         boolean infructueux = true;
         infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu)._1();
         if(infructueux) {
@@ -50,9 +60,6 @@ public class CompteEstBon {
         System.out.println("Le compte est bon!!");
         System.out.println("Calcul :");
         calculs.forEach(System.out::println);
-        System.out.println("Nb appel: " + NB_APPEL);
-        System.out.println("Commencement test");
-        Nombres.faireTourner(5000);
     }
 
     public static Pair<Boolean, Integer> rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
