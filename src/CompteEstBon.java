@@ -1,33 +1,67 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BinaryOperator;
 
 public class CompteEstBon {
 
+    /**
+     * représente l'addition
+     */
     private static final BinaryOperator<Integer> PLUS = (integer, integer2) -> integer + integer2;
+    /**
+     * représente a soustraction
+     */
     private static final BinaryOperator<Integer> MINUS = (integer, integer2) -> integer - integer2;
+    /**
+     * représente la multiplcation
+     */
     private static final BinaryOperator<Integer> MUL = (integer, integer2) -> integer * integer2;
+    /**
+     * représente la division
+     */
     private static final BinaryOperator<Integer> DIV = (integer, integer2) -> integer / integer2;
-    public static final List<BinaryOperator<Integer>> LIST_OPERATIONS = List.of(MUL, PLUS, DIV, MINUS);
+    /**
+     * liste de toutes les opérations
+     */
+    public static final List<BinaryOperator<Integer>> LIST_OPERATIONS = List.of(MUL, DIV, PLUS, MINUS);
 
+    /**
+     * liste représentant les calculs fait
+     */
     private static List<String> calculs = new ArrayList<>();
+
+    /**
+     * variable représentant le nombre d'appel à rechercherSolution
+     */
     private static int NB_APPEL = 0;
 
     public static void main(String[] args) {
-        List<Integer> nombres = new ArrayList<>(List.of(3, 75, 1, 4, 5, 2));
-        int attendu = 598;
-        boolean infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu)._1();
-        if(!infructueux) {
-            System.out.println("Le compte est bon!!");
-            System.out.println("Calcul :");
-            calculs.forEach(System.out::println);
-        } else {
-            System.out.println("Pas de solutions exacte.");
-
+        List<Integer> nombres = new ArrayList<>(List.of(1, 3, 5, 1, 10, 3, 2));
+        int attendu = 970;
+        boolean infructueux = true;
+        //variable oscillant entre -1 et 1
+        int compteur = -1;
+        //variable représentant le nombre d'essaie
+        int nbEssaie = 0;
+        while (infructueux) {
+            infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu + nbEssaie * compteur)._1();
+            if(compteur == -1) compteur = 1;
+            else {
+                compteur = -1;
+                nbEssaie++;
+            }
+            if(infructueux) {
+                System.out.println("Pas de solutions exacte.");
+                System.out.println("Calcul avec " + (attendu + nbEssaie * compteur));
+            }
         }
+        System.out.println("Le compte est bon!!");
+        System.out.println("Calcul :");
+        calculs.forEach(System.out::println);
         System.out.println("Nb appel: " + NB_APPEL);
         System.out.println("Commencement test");
-        Nombres.faireTourner(200);
+        //Nombres.faireTourner(2000);
     }
 
     public static Pair<Boolean, Integer> rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
@@ -54,21 +88,20 @@ public class CompteEstBon {
                     newNombres.remove(newNombres.indexOf(nombre1));
                     newNombres.remove(newNombres.indexOf(nombre2));
                     newNombres.add(0, resultat);
-                    //System.out.println("Essaie avec: " + nombre1 + afficherOperation(operation) + nombre2 + "=" + resultat);
                     infructueux = rechercherSolution(newNombres, operations, attendu)._1();
                     if(infructueux) {
-                        //System.out.println("Infructueux avec: " + nombre1 + afficherOperation(operation) + nombre2 + "=" + resultat);
+                        //si on a pas essayé toutes les opérations on essaie la suivante
                         if(indiceOperation < operations.size() - 1) indiceOperation++;
+                        //sinon on reset et on change de nombre
                         else {
                             indiceOperation = 0;
                             indiceNombres++;
                         }
-                    } else {
-                        calculs.add(0, nombre1 + afficherOperation(operation) + nombre2 + " = " + resultat);
                     }
                 } else {
-                    //System.out.println("Pas accessible avec: " + nombre1 + afficherOperation(operation) + nombre2);
+                    //si on a pas essayé toutes les opérations on essaie la suivante
                     if(indiceOperation < operations.size() - 1) indiceOperation++;
+                    //sinon on reset et on change de nombre
                     else {
                         indiceOperation = 0;
                         indiceNombres++;
