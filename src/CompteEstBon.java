@@ -36,44 +36,37 @@ public class CompteEstBon {
      */
     private static int NB_APPEL = 0;
 
+    private static int solutionPlusProche;
+
     public static void main(String[] args) {
-        List<Integer> nombres = new ArrayList<>(List.of(1, 3, 5, 1, 10, 3, 2));
-        int attendu = 970;
+        List<Integer> nombres = new ArrayList<>(List.of(50, 5, 1, 6, 5, 6));
+        int attendu = 686;
         boolean infructueux = true;
-        //variable oscillant entre -1 et 1
-        int compteur = -1;
-        //variable représentant le nombre d'essaie
-        int nbEssaie = 0;
-        while (infructueux) {
-            infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu + nbEssaie * compteur)._1();
-            if(compteur == -1) compteur = 1;
-            else {
-                compteur = -1;
-                nbEssaie++;
-            }
-            if(infructueux) {
-                System.out.println("Pas de solutions exacte.");
-                System.out.println("Calcul avec " + (attendu + nbEssaie * compteur));
-            }
+        infructueux = rechercherSolution(nombres, LIST_OPERATIONS, attendu)._1();
+        if(infructueux) {
+            System.out.println("Pas de solutions exacte pour " + attendu + ". Recherche avec " + solutionPlusProche);
+            rechercherSolution(nombres, LIST_OPERATIONS, solutionPlusProche)._1();
         }
         System.out.println("Le compte est bon!!");
         System.out.println("Calcul :");
         calculs.forEach(System.out::println);
         System.out.println("Nb appel: " + NB_APPEL);
         System.out.println("Commencement test");
-        //Nombres.faireTourner(2000);
+        Nombres.faireTourner(5000);
     }
 
     public static Pair<Boolean, Integer> rechercherSolution(List<Integer> nombres, List<BinaryOperator<Integer>> operations, int attendu) {
         NB_APPEL++;
-        boolean infructueux;
+        boolean infructueux = true;
         if(nombres.contains(attendu)) {
             infructueux = false;
+        } else if(nombres.size() == 1) {
+            int current = nombres.get(0);
+            if(Math.abs(current - attendu) < Math.abs(solutionPlusProche - attendu)) solutionPlusProche = current;
         }
         else {
             //tri par ordre croissant
             //nombres.sort((o1, o2) -> Integer.compare(o2, o1));
-            infructueux = true;
             int indiceNombres = 0;
             int indiceOperation = 0;
             List<Pair<Integer, Integer>> possibilites = genererPossibilites(nombres);
@@ -97,6 +90,9 @@ public class CompteEstBon {
                             indiceOperation = 0;
                             indiceNombres++;
                         }
+                    } else {
+                        //ajout à l'indice 0 afin d'avoir le bon ordre
+                        calculs.add(0, nombre1 + afficherOperation(operation) + nombre2 + " = " + resultat);
                     }
                 } else {
                     //si on a pas essayé toutes les opérations on essaie la suivante
@@ -114,15 +110,6 @@ public class CompteEstBon {
 
     public static void reset() {
         NB_APPEL = 0;
-    }
-
-    private static void afficherSolution(boolean b){
-        if(!b) {
-            System.out.println("Le compte est bon!!");
-            System.out.println("Calcul :");
-            calculs.forEach(System.out::println);
-        }
-        System.out.println("Nb appel: " + NB_APPEL);
     }
 
     private static boolean acceptable(int nombre1, int nombre2, BinaryOperator<Integer> operation) {
