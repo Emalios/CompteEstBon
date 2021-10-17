@@ -19,7 +19,7 @@ public class Nombres {
     public static void ajouterProbleme() {
         List<Integer> valeursChoisies = new ArrayList<>();
         int nombreAleatoire;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             nombreAleatoire = (int) (Math.random() * ((13) + 1));
             valeursChoisies.add(valeurs.get(nombreAleatoire));
         }
