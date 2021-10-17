@@ -38,7 +38,7 @@ public class CompteEstBon {
 
     public static void main(String[] args) {
         List<Integer> nombres = new ArrayList<>(List.of(1, 3, 5, 1, 10, 3, 2));
-        int attendu = 973;
+        int attendu = 970;
         boolean infructueux = true;
         //variable oscillant entre -1 et 1
         int compteur = -1;
@@ -97,9 +97,6 @@ public class CompteEstBon {
                             indiceOperation = 0;
                             indiceNombres++;
                         }
-                    } else {
-                        //ajout à l'indice 0 afin d'avoir le bon ordre
-                        calculs.add(0, nombre1 + afficherOperation(operation) + nombre2 + " = " + resultat);
                     }
                 } else {
                     //si on a pas essayé toutes les opérations on essaie la suivante
