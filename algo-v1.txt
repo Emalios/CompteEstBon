@@ -3,7 +3,9 @@ Debut:
     nombres <- lire()
     attendu <- lire()
     infructueux <- rechercherSolution(nombres, operations, attendu)
+    #cette version ne supporte pas les cas où la solution n'est pas trouvé
     ecrire("Le compte est bon")
+    #on écrit les opérations recensés
     ecrireOperations()
 Fin
 
@@ -15,32 +17,49 @@ Debut:
     sinon
         indiceNombres <- 0
         indiceOperation <- 0
+        #on génère toutes les possibilités de taille 2 avec en éléments les nombres pour itérer avec chaque opérations sur chaque couple possible
         possibilites <- genererPossibilites(nombres)
+        #on itère tant que c'est infructueux et qu'on a pas essayé toutes les combinaisons de couples de nombres
         tantque infructueux et indiceNombres < (taille(possibilites) - 1):
+            #on récupère la combinaison courrante
             possibilite <- val(possibilites, indiceNombres)
+            #on récupére la première opérande
             nombre1 <- possibilite._1
+            #on récupère la deuxième opérande
             nombre2 <- possibilite._2
+            #on récupère l'opération courrante
             operation <- val(operations, indiceOperation)
-            si acceptable(nombre1; nombre2, operation) alors
+            #on teste si nos choix sont acceptables
+            si acceptable(nombre1, nombre2, operation) alors
+                #on calcule le résultat
                 resultat = faireOperation(nombre1, operation, nombre2)
+                #on crée une nouvelles listes
                 nouveauxNombres = creerListeAPartir(nombres)
+                #on supprime les deux opérandes utilisés
                 sup(nouveauxNombres, nombre1)
                 sup(nouveauxNombres, nombre2
+                #on ajoute le résultatn en tête
                 adjtlis(nouveauxNombres, resultat)
+                #on appel récursivement la méthode rechercherSolution avec la nouvelle liste
                 infructueux <- rechercherSolution(nouveauxNombres, operations, attendu)
                 si infructueux alors
+                    #si on a pas itéré sur chaque opération pour le couple de nombres courant, on incrémente l'indice pour les opérations
                     si indiceOperation < taille(operations) - 1 alors
                         indiceOperation <- indiceOperation + 1
+                    #si on a déjà essayé toutes les opérations, on réinitialise son indice à 0 et on incrémente l'indice pour les couples de nombres
                     sinon
                         indiceOperation <- 0
                         indiceNombres <- indiceNombres + 1
                     fsi
                 sinon
+                    #on enregistre le calcul
                     enregistrerOperation(nombre1, operation, nombre2, resultat)
                 fsi
             sinon
+                #si on a pas itéré sur chaque opération pour le couple de nombres courant, on incrémente l'indice pour les opérations
                 si indiceOperation < taille(operations) - 1 alors
                     indiceOperation <- indiceOperation + 1
+                #si on a déjà essayé toutes les opérations, on réinitialise son indice à 0 et on incrémente l'indice pour les couples de nombres
                 sinon
                     indiceOperation <- 0
                     indiceNombres <- indiceNombres + 1
@@ -49,3 +68,28 @@ Debut:
     fsi
     retourne infructueux
 Fin
+
+fonction acceptable(nombre1: entier, nombre2: entier, operation: Operation): booléen:
+Debut:
+    #pour éviter les divisions par 0
+    si nombre2 = 0 et operation = '/' alors
+        retourne faux
+    #pour éviter les multiplications ou division avec un 1 dans les opérandes
+    si (nombre1 = 1 ou nombre2 = 1) et (operation = '/' ou operation = '*') alors
+        retourne faux
+    #pour éviter les divisions non entières
+    si operation = '/' et nombre1 mod nombre2 != 0 alors
+        retourne faux
+    #pour éviter que le résultat soit inférieur ou égal à 0
+    si resultat <= 0 alors
+        retourne faux
+    fsi
+    retourne vrai
+Fin
+
+Lexique:
+-Couple: <_1: entier, _2: entier>, représente un couple d'entier
+-Operation: char, représente une opération modélisé ici par son charactère, exemple: '+' pour l'addition
+-enregistrerOperation(nombre1: entier, operation: Operation, nombre2: entier, resultat: entier), enregistre une opération afin de l'afficher à la fin
+-ecrireOperation(): ecrit le sopérations enregistrés
+-genererPossibilites(nombres: Liste<entier>): Liste<Couple>, méthode générant toutes les possibilités de taille 2 à partir de la liste nombres

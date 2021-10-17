@@ -124,7 +124,7 @@ public class CompteEstBon {
         if(((nombre1 == 1) || (nombre2 == 1)) && (operation.equals(DIV) || operation.equals(MUL))) return false;
         if(operation == DIV && nombre1 % nombre2 != 0) return false;
         int resultat = operation.apply(nombre1, nombre2);
-        if(resultat < 0) return false;
+        if(resultat <= 0) return false;
         return true;
     }
 
