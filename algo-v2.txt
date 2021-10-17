@@ -1,0 +1,60 @@
+Debut:
+    operations <- lire()
+    nombres <- lire()
+    attendu <- lire()
+    infructueux <- rechercherSolution(nombres, operations, attendu)
+    si infructueux alors
+        ecrire("Pas de solution pour ", attendu, " essaie avec ", recupererSolutionPlusProche())
+        rechercherSolution(nombres, operations, attendu)
+    fsi
+    ecrire("Le compte est bon")
+    ecrireOperations()
+Fin
+
+fonction rechercherSolution(nombres: Liste<entier>, operations: Liste<Operation>, attendu: entier): booléen
+Debut:
+    infructueux <- vrai
+    si val(nombres, 0) = attendu alors
+        infructueux <- faux
+    sinon si taille(nombres) = 1 alors
+        courrant <- val(nombres, 0)
+        si(abs(courrant - attendu) < abs(solutionPlusProche - attendu)) alors
+            solutionPlusProche = courrant
+        fsi
+    sinon
+        indiceNombres <- 0
+        indiceOperation <- 0
+        possibilites <- genererPossibilites(nombres)
+        tantque infructueux et indiceNombres < (taille(possibilites) - 1):
+            possibilite <- val(possibilites, indiceNombres)
+            nombre1 <- possibilite._1
+            nombre2 <- possibilite._2
+            operation <- val(operations, indiceOperation)
+            si acceptable(nombre1; nombre2, operation) alors
+                resultat = faireOperation(nombre1, operation, nombre2)
+                nouveauxNombres = creerListeAPartir(nombres)
+                sup(nouveauxNombres, nombre1)
+                sup(nouveauxNombres, nombre2
+                adjtlis(nouveauxNombres, resultat)
+                infructueux <- rechercherSolution(nouveauxNombres, operations, attendu)
+                si infructueux alors
+                    si indiceOperation < taille(operations) - 1 alors
+                        indiceOperation <- indiceOperation + 1
+                    sinon
+                        indiceOperation <- 0
+                        indiceNombres <- indiceNombres + 1
+                    fsi
+                sinon
+                    enregistrerOperation(nombre1, operation, nombre2, resultat)
+                fsi
+            sinon
+                si indiceOperation < taille(operations) - 1 alors
+                    indiceOperation <- indiceOperation + 1
+                sinon
+                    indiceOperation <- 0
+                    indiceNombres <- indiceNombres + 1
+                fsi
+            fsi
+    fsi
+    retourne infructueux
+Fin
